@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E-Learn — HTML & CSS Multi-Page (Hash Navigation)</title>
+  <meta name="description" content="Simple multi-page e-learning front-end built with only HTML & CSS (uses :target + checkboxes for interactivity)." />
+  <style>
+    :root{
+      --bg:#0f172a; --card:#0b1320; --muted:#94a3b8; --accent1:#06b6d4; --accent2:#3b82f6; --glass: rgba(255,255,255,0.04);
+      --radius:14px; --maxw:1100px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background:linear-gradient(180deg,#e6f7ff 0%, #f8fafc 60%); color:#0b1320}
+    a{color:inherit; text-decoration:none}
+
+    /* layout */
+    .wrap{max-width:var(--maxw); margin:36px auto; padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    nav{display:flex;gap:12px;align-items:center}
+    nav a{padding:8px 12px;border-radius:10px;font-weight:600;color:var(--bg);background:linear-gradient(180deg,#ffffff,#f1f5f9);box-shadow:0 6px 18px rgba(59,130,246,0.08)}
+    nav a:hover{transform:translateY(-2px)}
+
+    /* page sections (hash "pages") */
+    .page{display:none;background:transparent;padding:18px;border-radius:var(--radius)}
+    /* default home */
+    .page:target{display:block}
+    /* show #home by default using :not(:target) hack on body > .wrap > .page:first-child when no hash */
+    body:not(:target) .page.home{display:block}
+
+    /* hero */
+    .hero{display:flex;gap:18px;align-items:center;background:linear-gradient(90deg,#e6faff,#eef2ff);padding:26px;border-radius:16px}
+    .hero .left{flex:1}
+    .hero h1{font-size:28px;margin-bottom:8px;color:#0b1320}
+    .hero p{color:var(--muted);margin-bottom:12px}
+    .cta{display:inline-block;padding:10px 14px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;font-weight:700}
+    .hero .right{width:300px}
+    .cover{width:100%;height:160px;border-radius:12px;object-fit:cover;display:block}
+
+    /* course grid */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:16px}
+    .card{background:linear-gradient(180deg,#ffffff,#fbfdff);border-radius:12px;padding:12px;box-shadow:0 8px 24px rgba(11,19,32,0.06);display:flex;flex-direction:column}
+    .thumb{height:120px;border-radius:10px;overflow:hidden}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .meta{margin-top:10px}
+    .meta h3{margin:0 0 6px 0}
+    .meta .sub{font-size:13px;color:var(--muted)}
+    .card .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .btn{padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;font-weight:700}
+
+    /* Course detail layout */
+    .detail{display:grid;grid-template-columns:1fr 360px;gap:18px}
+    .video{background:#000;border-radius:12px;overflow:hidden;height:360px}
+    .lessons{background:linear-gradient(180deg,#ffffff,#fbfdff);padding:12px;border-radius:12px}
+    .lesson{display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px}
+    .lesson + .lesson{margin-top:8px}
+    .lesson input[type=checkbox]{accent-color:var(--accent2)}
+
+    /* profile */
+    .profile-grid{display:grid;grid-template-columns:320px 1fr;gap:18px}
+    .profile-card{background:linear-gradient(90deg,#fff,#fbfdff);padding:16px;border-radius:12px}
+
+    /* footer */
+    footer{margin-top:22px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:980px){
+      .detail{grid-template-columns:1fr}
+      .profile-grid{grid-template-columns:1fr}
+      .hero{flex-direction:column}
+      .hero .right{width:100%}
+    }
+
+    /* small visual polish */
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(59,130,246,0.12);color:#1e3a8a;font-weight:700;font-size:13px}
+    .tiny{font-size:13px;color:var(--muted)}
+
+    /* make hash-targeting work: show #home when hash empty */
+    /* no JS — use checkbox trick to persist lesson completion visually */
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">EL</div>
+        <div>
+          <div style="font-weight:800;font-size:18px">E-Learn</div>
+          <div class="tiny">Interactive courses • HTML & CSS demo</div>
+        </div>
+      </div>
+
+      <nav aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#courses">Courses</a>
+        <a href="#course-react-101">Course</a>
+        <a href="#profile">Profile</a>
+      </nav>
+    </header>
+
+    <!-- HOME (default) -->
+    <section id="home" class="page home">
+      <div class="hero">
+        <div class="left">
+          <div class="pill">Start Learning</div>
+          <h1>Master web development with bite-sized lessons</h1>
+          <p>Practical courses, embedded videos, and a simple progress interface — built using only HTML & CSS (no JavaScript required).</p>
+          <div style="margin-top:12px"><a class="cta" href="#courses">Browse Courses</a></div>
+        </div>
+        <div class="right">
+          <img class="cover" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=1a6f0f0261a3be6fb4f0a3b3b9a7e6a9" alt="learning cover" />
+        </div>
+      </div>
+
+      <h2 style="margin-top:18px">Popular Courses</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=3b4f6c2a9e2e0b8f" alt="React"/></div>
+          <div class="meta">
+            <h3>React for Beginners</h3>
+            <div class="sub">Frontend • Beginner</div>
+            <p class="tiny">Fundamentals of components, hooks and state.</p>
+          </div>
+          <div class="foot">
+            <div class="tiny">3 lessons</div>
+            <a class="btn" href="#course-react-101">Open</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=7c4b3f0c9c5f" alt="Node"/></div>
+          <div class="meta">
+            <h3>Node.js APIs</h3>
+            <div class="sub">Backend • Intermediate</div>
+            <p class="tiny">Build REST APIs, routing and middleware.</p>
+          </div>
+          <div class="foot">
+            <div class="tiny">3 lessons</div>
+            <a class="btn" href="#courses">Open</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=2f4d1d4b9f0e" alt="Design"/></div>
+          <div class="meta">
+            <h3>UI/UX Basics</h3>
+            <div class="sub">Design • Beginner</div>
+            <p class="tiny">Wireframes, prototyping and design principles.</p>
+          </div>
+          <div class="foot">
+            <div class="tiny">2 lessons</div>
+            <a class="btn" href="#courses">Open</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- COURSES LIST -->
+    <section id="courses" class="page">
+      <h2>All Courses</h2>
+      <div class="grid" style="margin-top:12px">
+        <!-- repeat cards -->
+        <article class="card">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=3b4f6c2a9e2e0b8f" alt="React"/></div>
+          <div class="meta">
+            <h3>React for Beginners</h3>
+            <div class="sub">Frontend • Beginner</div>
+            <p class="tiny">Fundamentals of components, hooks and state.</p>
+          </div>
+          <div class="foot">
+            <div class="tiny">3 lessons</div>
+            <a class="btn" href="#course-react-101">Open</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=7c4b3f0c9c5f" alt="Node"/></div>
+          <div class="meta">
+            <h3>Node.js APIs</h3>
+            <div class="sub">Backend • Intermediate</div>
+            <p class="tiny">Build REST APIs, routing and middleware.</p>
+          </div>
+          <div class="foot">
+            <div class="tiny">3 lessons</div>
+            <a class="btn" href="#courses">Open</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=2f4d1d4b9f0e" alt="Design"/></div>
+          <div class="meta">
+            <h3>UI/UX Basics</h3>
+            <div class="sub">Design • Beginner</div>
+            <p class="tiny">Wireframes, prototyping and design principles.</p>
+          </div>
+          <div class="foot">
+            <div class="tiny">2 lessons</div>
+            <a class="btn" href="#courses">Open</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- SINGLE COURSE (React) -->
+    <section id="course-react-101" class="page">
+      <a href="#courses" class="tiny">← Back to courses</a>
+      <div style="display:flex;gap:18px;align-items:flex-start;margin-top:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:320px">
+          <div class="video">
+            <iframe src="https://www.youtube.com/embed/Ke90Tje7VS0" title="Intro to React" frameborder="0" allowfullscreen style="width:100%;height:100%;display:block"></iframe>
+          </div>
+          <div style="margin-top:12px;background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:12px;box-shadow:0 8px 24px rgba(11,19,32,0.06)">
+            <h3 style="margin:0 0 6px 0">Intro to React</h3>
+            <p class="tiny">An overview of React — components, JSX and rendering.</p>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+              <!-- purely visual completion with checkbox (no persistence) -->
+              <label class="tiny" style="display:flex;gap:8px;align-items:center"><input type="checkbox"> Mark complete</label>
+              <div style="margin-left:auto" class="tiny">Duration: 12m</div>
+            </div>
+          </div>
+
+          <!-- Lesson 2 -->
+          <div style="margin-top:12px;background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:12px;box-shadow:0 8px 24px rgba(11,19,32,0.06)">
+            <h3 style="margin:0 0 6px 0">Components & Props</h3>
+            <p class="tiny">How to compose UIs with reusable components.</p>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+              <label class="tiny" style="display:flex;gap:8px;align-items:center"><input type="checkbox"> Mark complete</label>
+              <div style="margin-left:auto" class="tiny">Duration: 18m</div>
+            </div>
+          </div>
+
+          <!-- Lesson 3 -->
+          <div style="margin-top:12px;background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:12px;box-shadow:0 8px 24px rgba(11,19,32,0.06)">
+            <h3 style="margin:0 0 6px 0">useState & useEffect</h3>
+            <p class="tiny">Essential hooks for managing state and side-effects.</p>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+              <label class="tiny" style="display:flex;gap:8px;align-items:center"><input type="checkbox"> Mark complete</label>
+              <div style="margin-left:auto" class="tiny">Duration: 22m</div>
+            </div>
+          </div>
+        </div>
+
+        <aside style="width:320px;min-width:260px">
+          <div class="lessons">
+            <h4 style="margin-top:0">Course: React for Beginners</h4>
+            <p class="tiny">3 lessons • Beginner</p>
+            <hr style="margin:10px 0;border:none;border-top:1px solid #eef2f7">
+            <div class="lesson"><div>Intro to React</div><div class="tiny">12m</div></div>
+            <div class="lesson"><div>Components & Props</div><div class="tiny">18m</div></div>
+            <div class="lesson"><div>useState & useEffect</div><div class="tiny">22m</div></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- PROFILE (uses checkboxes visually) -->
+    <section id="profile" class="page">
+      <h2>Your Profile</h2>
+      <div class="profile-grid" style="margin-top:12px">
+        <div class="profile-card">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:white;font-weight:800">U</div>
+            <div>
+              <div style="font-weight:800">Demo Learner</div>
+              <div class="tiny">Member since 2025</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <div class="tiny">Progress (visual only)</div>
+            <div style="margin-top:8px;background:#eef2f8;border-radius:12px;padding:8px">
+              <div style="height:10px;border-radius:8px;background:linear-gradient(90deg,var(--accent1),var(--accent2));width:40%"></div>
+            </div>
+            <div class="tiny" style="margin-top:6px">Overall: 40% complete</div>
+          </div>
+        </div>
+
+        <div style="background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:12px">
+          <h3 style="margin-top:0">Your Courses</h3>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><div>React for Beginners</div><div class="tiny">40%</div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><div>Node.js APIs</div><div class="tiny">0%</div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><div>UI/UX Basics</div><div class="tiny">0%</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Made with ❤️ • HTML & CSS demo — no JavaScript required (video embeds use iframes)</footer>
+  </div>
+</body>
+</html>
